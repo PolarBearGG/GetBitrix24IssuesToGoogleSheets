@@ -13,103 +13,13 @@
 function onOpen() {
     var ui = SpreadsheetApp.getUi();
     ui.createMenu('Bitrix24 Connector')
-        .addItem('Set Bitrix24 token', 'setBitrix24Token')
-        .addItem('Set User ID', 'setBitrix24UserId')
-        .addItem('Set Issues Count', 'setIssuesCount')
         .addSeparator()
         .addItem('Get Data', 'refresh')
-        .addSeparator()
-        .addItem('Reset Credentials', 'reset')
         .addToUi();
 }
-var token = documentProperties.getProperty('BITRIX24_TOKEN');
-var userId = documentProperties.getProperty('BITRIX24_USER_ID');
-var cnt = documentProperties.getProperty('ISSUES_COUNT');
-
-
-function setIssuesCount() {
-    var ui = SpreadsheetApp.getUi();
-
-
-    var result = ui.prompt(
-        'Issues Count',
-        'Please enter issues count:',
-        ui.ButtonSet.OK_CANCEL);
-
-    // Process the user's response.
-    var button = result.getSelectedButton();
-    var text = result.getResponseText();
-    if (button == ui.Button.OK) {
-        // User clicked "OK".
-        documentProperties.setProperty("ISSUES_COUNT", text);
-    } else if (button == ui.Button.CANCEL) {
-        // User clicked "Cancel".
-    } else if (button == ui.Button.CLOSE) {
-        // User clicked X in the title bar.
-
-    }
-
-}
-
-
-
-
-
-function setBitrix24Token() {
-    var ui = SpreadsheetApp.getUi();
-
-
-    var result = ui.prompt(
-        'Bitrix24 Token',
-        'Please enter your Bitrix24 Token:',
-        ui.ButtonSet.OK_CANCEL);
-
-    // Process the user's response.
-    var button = result.getSelectedButton();
-    var text = result.getResponseText();
-    if (button == ui.Button.OK) {
-        // User clicked "OK".
-        documentProperties.setProperty("BITRIX24_TOKEN", text);
-    } else if (button == ui.Button.CANCEL) {
-        // User clicked "Cancel".
-    } else if (button == ui.Button.CLOSE) {
-        // User clicked X in the title bar.
-
-    }
-
-}
-
-function setBitrix24UserId() {
-    var ui = SpreadsheetApp.getUi(); // Same variations.
-
-    var result = ui.prompt(
-        'Bitrix24 User ID',
-        'Please enter your Bitrix24 User ID:',
-        ui.ButtonSet.OK_CANCEL);
-
-    // Process the user's response.
-    var button = result.getSelectedButton();
-    var text = result.getResponseText();
-    if (button == ui.Button.OK) {
-        // User clicked "OK".
-        documentProperties.setProperty("BITRIX24_USER_ID", text);
-    } else if (button == ui.Button.CANCEL) {
-        // User clicked "Cancel".
-    } else if (button == ui.Button.CLOSE) {
-        // User clicked X in the title bar.
-
-    }
-
-}
-
-
-function reset() {
-
-    documentProperties.deleteProperty("BITRIX24_TOKEN");
-    documentProperties.deleteProperty("BITRIX24_USER_ID");
-    documentProperties.deleteProperty("ISSUES_COUNT");
-
-}
+var token = "";
+var userId = "";
+var cnt = 123;
 
 function getTasks() {
 
@@ -143,7 +53,7 @@ function getTasks() {
 
 
 
-    var GoogleSheetsFile = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1LWywk2SIrJ22lGXwIcycN2dBehkCSV-y0zBhoVSGsb0/edit#gid=0");
+    var GoogleSheetsFile = SpreadsheetApp.getactivesheet();
     var GoogleSheetsPastePage = GoogleSheetsFile.getSheetByName('Bitrix');
     Logger.log([nodeArray]);
     GoogleSheetsPastePage.getRange(1, 1, 1, nodeArray.length).setValues([nodeArray]);
@@ -157,19 +67,7 @@ function getTasks() {
 
 
 
-
-
-
-
-
-
 function refresh() {
-    if (!documentProperties.getProperty("BITRIX24_TOKEN")) {
-        setBitrix24Token();
-    }
-    if (!documentProperties.getProperty("BITRIX24_USER_ID")) {
-        setBitrix24UserId();
-    }
     getTasks();
     Logger.log('Done! ');
 }
